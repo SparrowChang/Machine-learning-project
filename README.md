@@ -55,6 +55,7 @@ plt.ylabel("y_test")
 plt.xlabel("y_pred")
 plt.scatter(y_test_pred1, y_test)
 ```
+![image](https://github.com/SparrowChang/Machine-learning-project/blob/master/Images/Subplot_Training%20Data_Test%20Data.PNG)
 
 Feature extraction. Need to do a correct study of all the feature variables when doing feature extraction. Some feature variables may need to be combined, and some feature variables need to be decomposed. I have to expand more than current feature variables. First need to check the data distribution of these feature variables by histogram. Look at the two features of wafer coordinates (X and Y). They are the geographic coordinates of the wafer. Using these two features can provide excellent visualization by the worst post burn-in result.
 
@@ -90,6 +91,7 @@ plt.scatter(X_test["X"],
             c=y_test["Target"] / y_test["Target"].max())
 _ = plt.plot()
 ```
+![image](https://github.com/SparrowChang/Machine-learning-project/blob/master/Images/Scatter_y_pred_y_test.PNG)
 
 #### Create a heat map of the correlation coefficient matrix to see the correlation between the feature variables
 ```python
