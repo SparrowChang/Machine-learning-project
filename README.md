@@ -1,15 +1,14 @@
 # Machine-learning-project
 
 ## Problem Definition
-Use current on-hand wafer data (etest, probe, pre burn-in, post burn-in) to fine a suitable method to analyze. In order to reduce uncessary test cost and keep the essential burn-in test items to reveal the real reliability window and perform more efficient, especially for burn-in tests.
+Use current on-hand wafer data (etest, probe, pre burn-in, post burn-in) to find a suitable method to analyze them. In order to reduce uncessary wafer burn-in test cost and only keep the essential test items to reveal the real reliability window and perform more efficient.
 
 ## Get Data & Exploratory Data Analysis
-Use excel, statistics software JMP and Python functions (pandas, numpy, sklearn and matplotlib), to check the data missing or outlier (over upper/lower limit). Refer 1_etests.ipynb to 4_postbi.ipynb. From these steps, I would know the data when etests each wafer just with 5 measurement die, but probe each wafer more than 2300 dies. Pre burn-in and post burn-in, their test limits are the same, major to know the dies survives through etest (~100% pass rate), probe (at least Yield 98.9%)to final burn-in (pass rate range from 0% to 100%, large variation), however some burn-in test items are critical and easily to fail as the early reliability gating. 
-So combine probe and post burn-in test items and wafer recenter to same coorindates as the training/test sets.For data analysis, I use XGBoost regression (also with weak classification concept) to perform the prediction by r2 score and RMSE. 
+Use excel, statistics software JMP and Python functions (pandas, numpy, sklearn and matplotlib) to check the data missing or outlier (over upper/lower limit). Refer 1_etests.ipynb to 4_postbi.ipynb, there are without missing daya only outier data. From these steps, I would know the data when etests each wafer only with 5 measurement dies, but probe each wafer more than 2300 dies as a whole wafer test. Pre burn-in and post burn-in, their test limits are the same, it shows that the dies survives through etest (~100% pass rate), probe (at least Yield 98.9%) to final burn-in (pre burn-in test pass rate close to 98%), however after the tourture test (post burn-in test pass rate some down to 0%, large variation), they indicates that some burn-in test are more strict, reversible, easily fail at the early reliability gating. And the burn-in test area are major from wafer top or wafer bottom near wafer edge area.
+So I check then combine probe/post burn-in test items as the same wafer recenter by coorindates (X and Y). for further training/test sets. For data analysis, I use XGBoost regression method (also with weak classification concept) to perform the prediction by r2 score and RMSE. 
 
 ## Data Clean/Preprocessing & Feature Engineering
-There are a total of 223 test items (probe test+ post burin-in test) here, assume the worst burn-in test item as my target variable.
-that is, the variable that needs to be predicted, and the remaining 222 test items are used as feature variables. The feature variable here is not the feature variable of a wafer, but the feature variable of the whole lot where the lot contains 23 wafers (different X and Y). The major is to predict the worst burn-in test result in the lot based on the feature variables of the 23 wafers.
+There are a total of 223 test items (probe test+ post burin-in test) and 23 wafers here, assume the worst post burn-in test item (in the code, I pick-up BI_TEST_35, pass rate 0%) as my target variable. That is, the variable that needs to be predicted, and the remaining 222 test items are used as feature variables. The feature variable here is not the feature variable of a wafer, but the feature variable of the whole lot, which contains 23 wafers. The major is to predict the worst burn-in test result in the lot based on the feature variables of the 23 wafers and find out other high correlation prerequisite test items.
 
 ## Model Training, Predict & Testing
 Preliminary predictions
@@ -52,7 +51,7 @@ plt.xlabel("y_pred")
 plt.scatter(y_test_pred1, y_test)
 ```
 
-Feature extraction. Need to do a correct study of all the feature variables when doing feature extraction. Some feature variables may need to be combined, and some feature variables need to be decomposed. I have to expand more than current feature variables. First need to check the data distribution of these characteristic variables by histogram. Look at the two characteristics of wafer coordinates (X and Y). They are the geographic coordinates of the wafer. Using these two features can provide excellent visualization by the worst post burn-in result.
+Feature extraction. Need to do a correct study of all the feature variables when doing feature extraction. Some feature variables may need to be combined, and some feature variables need to be decomposed. I have to expand more than current feature variables. First need to check the data distribution of these feature variables by histogram. Look at the two features of wafer coordinates (X and Y). They are the geographic coordinates of the wafer. Using these two features can provide excellent visualization by the worst post burn-in result.
 
 ```python
 plt.figure(figsize=(13, 8))
@@ -98,7 +97,7 @@ plt.savefig('Pearson Correlation Heatmap.png')
 plt.show();
 ```
 
-It can be seen from the heat map of the above correlation coefficient matrix that post burn-in test items have a strong positive correlation with each other than probe test items. look at the correlation between the feature variable and the target variable:
+It can be seen from the heat map of the above correlation coefficient matrix that post burn-in test items have a strong positive correlation with each other than probe test items. Look at the correlation between the feature variable and the target variable:
 
 ```python
 corr_with_Target_value = df.corr()["Target"].sort_values(ascending=False)
@@ -117,9 +116,9 @@ plt.show();
 df["Synthetic feature"] =(df['BI_TEST_132'] + df['BI_TEST_36'] + df['BI_TEST_133'])
 df["Synthetic feature"]=df["Synthetic feature"]/3
 ```
-Next use the new feature set with synthetic features (by group top correlation test items)to train our XGBoost model again
+Next use the new feature set with synthetic features (by group top correlation test items) to train our XGBoost model again
 From the above prediction results, the RMSE on the test set didn't been reduced from 0.0655 to 0.0675
-Guess the test items sum up already is lower the correlation
+Guess the test items sum up induces lower the correlation
 
 2.Train/Test | score/RMSE
 --- | ---
@@ -128,11 +127,21 @@ Test r2 score | 0.861673815963637
 Train RMSE | 0.0004            
 Test RMSE | 0.0674 
 
-3. Check wafer Y corridinate effect, from burn-in purpose pick up the die from each wafer top or bottom
+3. Check wafer Y corridinate effect, from burn-in purpose pick up the die from each wafer top or bottom (by Y coordinates)
 Let's first look at the data distribution of the dimensions and target variables:
 
 From the perspective of the distribution of dimensions, assume wafer coordinate Y is slightly sensitive to the worst bin failure. 
 Then decompose wafer coordinate Y into two intervals, Y(5 to 15) and Y (55 to 85) will be stored as one-hot
+
+```python
+Y_RANGES = zip(range(5, 15), range(55, 85))
+for r in Y_RANGES:
+    X_train["lat_%d_to_%d" % r] = X_train["Y"].apply(lambda l:1.0 if l>=r[0] and l<r[1] else 0.0)
+    
+Y_RANGES = zip(range(5, 15), range(55, 85))
+for r in Y_RANGES:
+    X_test["lat_%d_to_%d" % r] = X_test["Y"].apply(lambda l:1.0 if l>=r[0] and l<r[1] else 0.0)
+```
 
 3.Train/Test | score/RMSE
 --- | ---
@@ -141,7 +150,7 @@ Test r2 score | 0.8566688507098852
 Train RMSE | 0.0004            
 Test RMSE | 0.0686 
 
-4. Use BI_TEST_43 (with good and bad result) to seperate
+4. Use BI_TEST_43 (with good and bad result, pass rate 30.6%) to seperate
 
 ```python
 print(df.BI_TEST_43.describe())
