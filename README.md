@@ -110,8 +110,6 @@ plt.show();
 ```python
 df["Synthetic feature"] =(df['BI_TEST_132'] + df['BI_TEST_36'] + df['BI_TEST_133'])
 df["Synthetic feature"]=df["Synthetic feature"]/3
-print(df["Synthetic feature"])
-print(df)
 ```
 Next use the new feature set with synthetic features (by group top correlation test items)to train our XGBoost model again
 From the above prediction results, the RMSE on the test set didn't been reduced from 0.0655 to 0.0675
