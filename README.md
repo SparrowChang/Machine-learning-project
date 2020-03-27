@@ -4,10 +4,13 @@
 Use current on-hand wafer data (etest, probe, pre burn-in, post burn-in) to find a suitable method to analyze them. In order to reduce uncessary wafer burn-in test cost and only keep the essential test items to reveal the real reliability window and perform more efficient.
 
 ## Get Data & Exploratory Data Analysis
+Python file: 1_etests.ipynb, 2_probe.ipynb, 3_prebi.ipynb, 4_postbi.ipynb
 Use excel, statistics software JMP and Python functions (pandas, numpy, sklearn and matplotlib) to check the data missing or outlier (over upper/lower limit). Refer 1_etests.ipynb to 4_postbi.ipynb, there are without missing daya only outier data. From these steps, I would know the data when etests each wafer only with 5 measurement dies, but probe each wafer more than 2300 dies as a whole wafer test. Pre burn-in and post burn-in, their test limits are the same, it shows that the dies survives through etest (~100% pass rate), probe (at least Yield 98.9%) to final burn-in (pre burn-in test pass rate close to 98%), however after the tourture test (post burn-in test pass rate some down to 0%, large variation), they indicates that some burn-in test are more strict, reversible, easily fail at the early reliability gating. And the burn-in test area are major from wafer top or wafer bottom near wafer edge area.
 So I check then combine probe/post burn-in test items as the same wafer recenter by coorindates (X and Y). for further training/test sets. For data analysis, I use XGBoost regression method (also with weak classification concept) to perform the prediction by r2 score and RMSE. 
 
 ## Data Clean/Preprocessing & Feature Engineering
+CSV file (in Datasets): XGBoost_probe_postbi_combine.csv
+Python file: XGBoost_probe_postbi_combine.ipynb
 There are a total of 223 test items (probe test+ post burin-in test) and 23 wafers here, assume the worst post burn-in test item (in the code, I pick-up BI_TEST_35, pass rate 0%) as my target variable. That is, the variable that needs to be predicted, and the remaining 222 test items are used as feature variables. The feature variable here is not the feature variable of a wafer, but the feature variable of the whole lot, which contains 23 wafers. The major is to predict the worst burn-in test result in the lot based on the feature variables of the 23 wafers and find out other high correlation prerequisite test items.
 
 ## Model Training, Predict & Testing
