@@ -130,6 +130,12 @@ df.BI_TEST_43.hist()
 #bucket_1 (0.175 ~ 0.22)
 #bucket_2 (> 0.22)
 ```
-
+```python
+for r in ((-0.8, 0.175),(0.175, 0.22),(0.22, 0.3)):
+    X_train["pop_%d_to_%d" % r] = X_train["BI_TEST_43"].apply(lambda l:0.01 if l>=r[0] and l<r[1] else 0.0)
+    
+for r in ((-0.8, 0.175),(0.175, 0.22),(0.22, 0.3)):
+    X_test["pop_%d_to_%d" % r] = X_test["BI_TEST_43"].apply(lambda l:0.1 if l>=r[0] and l<r[1] else 0.0)
+```
 ## Sum up
 Feature synthesis and feature bucket, only explain that feature bucketing is not ideal for our dataset or for XGBoost. The effect of using feature bucketing is still a good method, but it is slightly worse than XGBoost.
