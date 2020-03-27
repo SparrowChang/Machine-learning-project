@@ -10,8 +10,7 @@ Use excel, statistics software JMP and Python functions (pandas, numpy, sklearn 
 So I check then combine probe/post burn-in test items as the same wafer recenter by coorindates (X and Y). for further training/test sets. For data analysis, I use XGBoost regression method (also with weak classification concept) to perform the prediction by r2 score and RMSE. 
 
 ## Data Clean/Preprocessing & Feature Engineering
-CSV file (in Datasets): XGBoost_probe_postbi_combine.csv
-
+CSV file (in Datasets): XGBoost_probe_postbi_combine.csv...
 Python file: XGBoost_probe_postbi_combine.ipynb
 
 There are a total of 223 test items (probe test+ post burin-in test) and 23 wafers here, assume the worst post burn-in test item (in the code, I pick-up BI_TEST_35, pass rate 0%) as my target variable. That is, the variable that needs to be predicted, and the remaining 222 test items are used as feature variables. The feature variable here is not the feature variable of a wafer, but the feature variable of the whole lot, which contains 23 wafers. The major is to predict the worst burn-in test result in the lot based on the feature variables of the 23 wafers and find out other high correlation prerequisite test items.
