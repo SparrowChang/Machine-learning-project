@@ -101,6 +101,7 @@ plt.suptitle("Pearson Correlation Heatmap")
 plt.savefig('Pearson Correlation Heatmap.png')
 plt.show();
 ```
+![image](https://github.com/SparrowChang/Machine-learning-project/blob/master/Images/Pearson%20Correlation%20Heatmap.png)
 
 It can be seen from the heat map of the above correlation coefficient matrix that post burn-in test items have a strong positive correlation with each other than probe test items. Look at the correlation between the feature variable and the target variable:
 
