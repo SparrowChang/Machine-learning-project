@@ -1,31 +1,23 @@
 # Machine-learning-project
 
-
 ## Problem Definition
-Use current on-hand wafer data (etest, probe, pre burn-in, post burn-in) to analyze the better method to find and reduce uncessary test cost and keep the must burn-in test items to reveal the real reliability window and perform efficiently, especially for burn-in tests.
+Use current on-hand wafer data (etest, probe, pre burn-in, post burn-in) to fine a suitable method to analyze. In order to reduce uncessary test cost and keep the essential burn-in test items to reveal the real reliability window and perform more efficient, especially for burn-in tests.
 
 ## Get Data & Exploratory Data Analysis
-We use Python 
+Use excel, statistics software JMP and Python functions (pandas, numpy, sklearn and matplotlib), to check the data missing or outlier (over upper/lower limit). Refer 1_etests.ipynb to 4_postbi.ipynb. From these steps, I would know the data when etests each wafer just with 5 measurement die, but probe each wafer more than 2300 dies. Pre burn-in and post burn-in, their test limits are the same, major to know the dies survives through etest (~100% pass rate), probe (at least Yield 98.9%)to final burn-in (pass rate range from 0% to 100%, large variation), however some burn-in test items are critical and easily to fail as the early reliability gating. 
+So combine probe and post burn-in test items and wafer recenter to same coorindates as the training/test sets.For data analysis, I use XGBoost regression (also with weak classification concept) to perform the prediction by r2 score and RMSE. 
 
 ## Data Clean/Preprocessing & Feature Engineering
 There are a total of 223 test items (probe test+ post burin-in test) here, assume the worst burn-in test item as my target variable.
-that is, the variable that needs to be predicted, and the remaining 222 test items are used as feature variables. The characteristic variable here is not the characteristic variable of a wafer, but the characteristic variable of the whole lot where the lot contains 23 wafers (different X and Y). I need to predict the worst burn-in test result in the lot based on the characteristic variables of the 23 wafers. Already wafer-center for both porbe test and post burn-in test.
+that is, the variable that needs to be predicted, and the remaining 222 test items are used as feature variables. The feature variable here is not the feature variable of a wafer, but the feature variable of the whole lot where the lot contains 23 wafers (different X and Y). The major is to predict the worst burn-in test result in the lot based on the feature variables of the 23 wafers.
 
 ## Model Training
-In this project, use Python pandas, numpy, sklearn and matplotlib.
-The method we use XGBoost regression (also with weak classification concept) 
-
 Preliminary predictions
-Before doing feature extraction, I used the original feature variables to train the model by XGBoos method (both with regression and classification concept)
-Used XGBoost's parameter settings to see the performance of the model.
-First I create training and test sets, then make predictions: 
-random_state = 0 to ensure the reproducibility
+Before doing feature extraction, I used the original feature variables to train the model by XGBoos default parameter to see the performance of the model. Hints: training and test sets, to ensure the reproducibility predictions (random_state = 0) 
 
-### The key point is not to do feature extraction, directly set the default parameter of XGBoost
-
+```python
 xgb_model1 = XGBRegressor()
 xgb_model1.fit(X_train, y_train, verbose=False)
-
 y_train_pred1 = xgb_model1.predict(X_train)
 y_test_pred1 = xgb_model1.predict(X_test)
 
@@ -37,6 +29,7 @@ train_rmse1 = np.sqrt(train_mse1)
 test_rmse1 = np.sqrt(test_mse1)
 print('Train RMSE: %.4f' % train_rmse1)
 print('Test RMSE: %.4f' % test_rmse1)
+```
 
 ### Visualization
 
@@ -46,7 +39,7 @@ plt.xlabel("y_pred")
 plt.scatter(y_test_pred1, y_test)
 
 
-### Model Predict & Testing
+## Model Predict & Testing
 Feature extraction. Need to do a correct study of all the feature variables when doing feature extraction. Some feature variables may need to be combined, and some feature variables need to be decomposed. I have to expand more than current feature variables. First need to check the data distribution of these characteristic variables by histogram. Look at the two characteristics of wafer coordinates (X and Y). They are the geographic coordinates of the wafer. Using these two features can provide excellent visualization by the worst post burn-in result.
 
 plt.figure(figsize=(13, 8))
