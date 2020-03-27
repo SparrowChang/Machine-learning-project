@@ -178,4 +178,4 @@ Train RMSE: | 0.0004
 Test RMSE: | 0.0675 
 
 ## Sum up
-Feature synthesis and feature bucket, only explain that feature bucketing is not ideal for our dataset or for XGBoost. The effect of using feature bucketing is still a good method, but it is slightly worse than XGBoost.
+Feature synthesis (Test r2 score:  0.8617) and feature bucket(Test r2 score:  0.8567/ 0.8260), only explain that feature bucketing is not ideal for our dataset or for XGBoost. The effect of using feature bucketing is still a good method, but it is slightly worse than XGBoost. (Test r2 score:  0.8697)
