@@ -113,6 +113,8 @@ plt.savefig('Correlation value.png')
 plt.show(); 
 ```
 
+![image](https://github.com/SparrowChang/Machine-learning-project/blob/master/Images/Correlation%20value.png)
+
 ## Model Optimization
 
 2. Synthetic features, by sum top 3 correlation post burn-in test items (BI_TEST_132,BI_TEST_36, BI_TEST_33). Explore the relationship between Synthetic features and Target value
