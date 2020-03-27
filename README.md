@@ -37,6 +37,13 @@ print('Train RMSE: %.4f' % train_rmse1)
 print('Test RMSE: %.4f' % test_rmse1)
 ```
 
+1.Train/Test | score/RMSE
+--- | ---
+Train r2 score | 0.9999948598635676
+Test r2 score | 0.8696620493512542
+Train RMSE | 0.0004            
+Test RMSE | 0.0655 
+
 #### Visualization
 ```python
 plt.figure(figsize=(7, 7))
@@ -114,11 +121,25 @@ Next use the new feature set with synthetic features (by group top correlation t
 From the above prediction results, the RMSE on the test set didn't been reduced from 0.0655 to 0.0675
 Guess the test items sum up already is lower the correlation
 
+2.Train/Test | score/RMSE
+--- | ---
+Train r2 score | 0.9999943800854812
+Test r2 score | 0.861673815963637
+Train RMSE | 0.0004            
+Test RMSE | 0.0674 
+
 3. Check wafer Y corridinate effect, from burn-in purpose pick up the die from each wafer top or bottom
 Let's first look at the data distribution of the dimensions and target variables:
 
 From the perspective of the distribution of dimensions, assume wafer coordinate Y is slightly sensitive to the worst bin failure. 
 Then decompose wafer coordinate Y into two intervals, Y(5 to 15) and Y (55 to 85) will be stored as one-hot
+
+3.Train/Test | score/RMSE
+--- | ---
+Train r2 score | 0.9999949389112046
+Test r2 score | 0.8566688507098852
+Train RMSE | 0.0004            
+Test RMSE | 0.0686 
 
 4. Use BI_TEST_43 (with good and bad result) to seperate
 
@@ -137,10 +158,12 @@ for r in ((-0.8, 0.175),(0.175, 0.22),(0.22, 0.3)):
     X_test["pop_%d_to_%d" % r] = X_test["BI_TEST_43"].apply(lambda l:0.1 if l>=r[0] and l<r[1] else 0.0)
 ```
 
-| Train r2 score:      | 0.9999948598635676 |
-| Test r2 score:       | 0.8696620493512542 |
-| Train RMSE:          | 0.0004             |
-| Test RMSE:           | 0.0655             |
+4.Train/Test | score/RMSE
+--- | ---
+Train r2 score: | 0.9999934040677946
+Test r2 score:  | 0.8259931383031068
+Train RMSE: | 0.0004            
+Test RMSE: | 0.0675 
 
 ## Sum up
 Feature synthesis and feature bucket, only explain that feature bucketing is not ideal for our dataset or for XGBoost. The effect of using feature bucketing is still a good method, but it is slightly worse than XGBoost.
