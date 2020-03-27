@@ -136,5 +136,11 @@ for r in ((-0.8, 0.175),(0.175, 0.22),(0.22, 0.3)):
 for r in ((-0.8, 0.175),(0.175, 0.22),(0.22, 0.3)):
     X_test["pop_%d_to_%d" % r] = X_test["BI_TEST_43"].apply(lambda l:0.1 if l>=r[0] and l<r[1] else 0.0)
 ```
+
+| Train r2 score:      | 0.9999948598635676 |
+| Test r2 score:       | 0.8696620493512542 |
+| Train RMSE:          | 0.0004             |
+| Test RMSE:           | 0.0655             |
+
 ## Sum up
 Feature synthesis and feature bucket, only explain that feature bucketing is not ideal for our dataset or for XGBoost. The effect of using feature bucketing is still a good method, but it is slightly worse than XGBoost.
