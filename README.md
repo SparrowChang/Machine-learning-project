@@ -37,8 +37,7 @@ print('Train RMSE: %.4f' % train_rmse1)
 print('Test RMSE: %.4f' % test_rmse1)
 ```
 
-### Visualization
-
+#### Visualization
 ```python
 plt.figure(figsize=(7, 7))
 plt.ylabel("y_test")
@@ -81,8 +80,7 @@ plt.scatter(X_test["X"],
 _ = plt.plot()
 ```
 
-### Create a heat map of the correlation coefficient matrix to see the correlation between the feature variables:
-
+#### Create a heat map of the correlation coefficient matrix to see the correlation between the feature variables
 ```python
 import seaborn as sns
 pd.set_option('precision',2)
