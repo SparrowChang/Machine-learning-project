@@ -7,6 +7,12 @@ Use current on-hand wafer data (etest, probe, pre burn-in, post burn-in) to find
 Python file: 1_etests.ipynb, 2_probe.ipynb, 3_prebi.ipynb, 4_postbi.ipynb
 
 Use excel, statistics software JMP and Python functions (pandas, numpy, sklearn and matplotlib) to check the data missing or outlier (over upper/lower limit). Refer 1_etests.ipynb to 4_postbi.ipynb, there are without missing daya only outier data. From these steps, I would know the data when etests each wafer only with 5 measurement dies, but probe each wafer more than 2300 dies as a whole wafer test. Pre burn-in and post burn-in, their test limits are the same, it shows that the dies survives through etest (~100% pass rate), probe (at least Yield 98.9%) to final burn-in (pre burn-in test pass rate close to 98%), however after the tourture test (post burn-in test pass rate some down to 0%, large variation), they indicates that some burn-in test are more strict, reversible, easily fail at the early reliability gating. And the burn-in test area are major from wafer top or wafer bottom near wafer edge area.
+
+Pre burn-in wafer map
+![image](https://github.com/SparrowChang/Machine-learning-project/blob/master/Images/Premap_wf.PNG)
+
+Post burn-in wafer map
+![image](https://github.com/SparrowChang/Machine-learning-project/blob/master/Images/Postmap_wf.PNG)
 So I check then combine probe/post burn-in test items as the same wafer recenter by coorindates (X and Y). for further training/test sets. For data analysis, I use XGBoost regression method (also with weak classification concept) to perform the prediction by r2 score and RMSE. 
 
 ## Data Clean/Preprocessing & Feature Engineering
